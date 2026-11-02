@@ -28,8 +28,9 @@ button, input, select { font: inherit; color: inherit; }
 .logo-fond { fill: var(--blanc); } .logo-maison { fill: none; stroke: var(--bleu); stroke-width: 2.2; stroke-linejoin: round; } .logo-point { fill: var(--bleu); }
 .langue { min-width: 44px; height: 44px; border-radius: 999px; border: 1px solid rgba(255,255,255,.55); background: rgba(255,255,255,.12); color: var(--blanc); font-size: 18px; cursor: pointer; }
 .hero-corps { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 16px clamp(16px, 4vw, 56px) 72px; text-align: center; }
-.titre { margin: 0; display: flex; flex-direction: column; gap: 8px; max-width: 920px; }
-.titre-fr { font-size: clamp(34px, 5.4vw, 68px); line-height: 1.05; font-weight: 800; letter-spacing: -.03em; }
+.titre { margin: 0; display: flex; flex-direction: column; gap: 8px; max-width: 1200px; }
+.titre-fr { font-size: clamp(34px, 4.9vw, 68px); line-height: 1.05; font-weight: 800; letter-spacing: -.03em; }
+@media (min-width: 760px) { .titre-fr { white-space: nowrap; } }   /* 02/11/2026 (Ahmed) : « phrase. » sur la même ligne */
 .titre-ar { font-family: var(--police-ar); font-size: clamp(28px, 4.2vw, 52px); line-height: 1.25; font-weight: 700; }
 .sous-titre { margin: 0; max-width: 820px; font-size: clamp(16px, 1.6vw, 19px); line-height: 1.6; color: #E8EEF7; }
 .barre { position: relative; width: 100%; max-width: 820px; display: flex; align-items: center; gap: 8px; padding: 8px 8px 8px 22px;

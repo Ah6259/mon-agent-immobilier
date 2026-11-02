@@ -336,7 +336,7 @@
     [].forEach.call(document.querySelectorAll("[data-fr]"), function (el) { el.textContent = LANG === "ar" ? el.getAttribute("data-ar") : el.getAttribute("data-fr"); });
     $("langue").textContent = LANG === "ar" ? "FR" : "ع";
     $("langue").setAttribute("aria-label", LANG === "ar" ? "Français" : "العربية");
-    $("exemples").innerHTML = EXEMPLES.map(function (x) { return '<button type="button" class="exemple" dir="auto">' + E(LANG === "ar" ? x[1] : x[0]) + "</button>"; }).join("");
+    $("exemples").innerHTML = EXEMPLES.slice(0, 1).map(function (x) { return '<button type="button" class="exemple" dir="auto">' + E(LANG === "ar" ? x[1] : x[0]) + "</button>"; }).join("");
     $("nb-annonces").textContent = D && D.n ? nb(D.n) : "—";
   }
   // phrase d'exemple qui s'écrit toute seule dans la barre vide
