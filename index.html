@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Mon agent immobilier — trouvez votre bien en une phrase</title>
+<meta name="description" content="Décrivez le bien que vous cherchez en une phrase, en français, en arabe ou en tunisien : appartement, maison, terrain, à louer ou à vendre, partout en Tunisie.">
+<meta name="theme-color" content="#0F5BD8">
+<link rel="canonical" href="https://monagent.clicvia.com/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mon agent immobilier — trouvez votre bien en une phrase">
+<meta property="og:description" content="Écrivez ce que vous cherchez, comme à un agent. Toutes les annonces de Tunisie qui correspondent, en un instant.">
+<meta property="og:url" content="https://monagent.clicvia.com/">
+<meta property="og:image" content="https://monagent.clicvia.com/assets/accueil.jpg">
+<link rel="icon" href="assets/icone.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=IBM+Plex+Sans+Arabic:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="assets/agent.css?v=2">
+</head>
+<body data-maj="2026-11-02">
+<a class="sauter" href="#q" data-fr="Aller à la recherche" data-ar="الانتقال إلى البحث">Aller à la recherche</a>
+
+<section class="hero" id="haut">
+  <header class="tete">
+    <a class="logo" href="./" aria-label="Mon agent immobilier — accueil">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect x="1" y="1" width="32" height="32" rx="10" class="logo-fond"/><path d="M9 18l8-7 8 7v8H9z" class="logo-maison"/><circle cx="17" cy="20.5" r="2" class="logo-point"/></svg>
+      <span data-fr="Mon agent immobilier" data-ar="وكيلي العقاري">Mon agent immobilier</span>
+    </a>
+    <button type="button" id="langue" class="langue" aria-label="العربية">ع</button>
+  </header>
+
+  <div class="hero-corps">
+    <h1 class="titre">
+      <span class="titre-fr" lang="fr" dir="ltr">Trouvez votre bien en une phrase.</span>
+      <span class="titre-ar" lang="ar" dir="rtl">ابحث عن عقارك بجملة واحدة.</span>
+    </h1>
+    <p class="sous-titre">
+      <span data-fr="Décrivez ce que vous cherchez, comme à un agent, en français, en arabe ou en tunisien." data-ar="صف ما تبحث عنه كما تفعل مع وكيل عقاري، بالفرنسية أو العربية أو التونسية.">Décrivez ce que vous cherchez, comme à un agent, en français, en arabe ou en tunisien.</span><br>
+      <span data-fr="Nous parcourons les annonces de toute la Tunisie pour vous." data-ar="نتصفح لك إعلانات كامل تونس.">Nous parcourons les annonces de toute la Tunisie pour vous.</span>
+    </p>
+    <form id="barre" class="barre" role="search">
+      <svg class="barre-loupe" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      <label for="q" class="cache" data-fr="Décrivez le bien que vous cherchez" data-ar="صف العقار الذي تبحث عنه">Décrivez le bien que vous cherchez</label>
+      <input id="q" type="search" autocomplete="off" enterkeyhint="search" spellcheck="false" dir="auto" placeholder="Décrivez le bien que vous cherchez…">
+      <button type="button" id="effacer" class="effacer" aria-label="Effacer" hidden>×</button>
+      <button type="button" id="micro" class="micro" aria-label="Dicter" hidden>
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+      </button>
+      <button type="submit" class="chercher" data-fr="Chercher" data-ar="ابحث">Chercher</button>
+    </form>
+    <div id="exemples" class="exemples" aria-label="Exemples de recherche"></div>
+  </div>
+</section>
+
+<section class="chiffres" id="chiffres">
+  <div><strong id="nb-annonces">—</strong><span data-fr="annonces à vendre et à louer, mises à jour chaque jour" data-ar="إعلان للبيع والكراء، تُحدَّث كل يوم">annonces à vendre et à louer, mises à jour chaque jour</span></div>
+  <div><strong>24</strong><span data-fr="gouvernorats, du quartier à la ville entière" data-ar="ولاية، من الحي إلى المدينة كاملة">gouvernorats, du quartier à la ville entière</span></div>
+  <div><strong>FR · ع</strong><span data-fr="écrivez en français, en arabe ou en tunisien" data-ar="اكتب بالفرنسية أو العربية أو التونسية">écrivez en français, en arabe ou en tunisien</span></div>
+</section>
+
+<main id="zone" class="zone">
+  <section id="resume" class="resume" aria-live="polite"></section>
+  <div class="outils" id="outils" hidden>
+    <p id="titre-liste" class="titre-liste"></p>
+    <div class="outils-droite">
+      <button type="button" id="vue-compacte" class="vue" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span data-fr="Vue compacte" data-ar="عرض مختصر">Vue compacte</span></button>
+      <label class="tri"><span data-fr="Trier" data-ar="ترتيب">Trier</span>
+        <select id="tri-choix">
+          <option value="pertinence" data-fr="Les plus pertinentes" data-ar="الأنسب">Les plus pertinentes</option>
+          <option value="recent" data-fr="Les plus récentes" data-ar="الأحدث">Les plus récentes</option>
+          <option value="prix" data-fr="Prix croissant" data-ar="السعر تصاعديًا">Prix croissant</option>
+          <option value="prix-" data-fr="Prix décroissant" data-ar="السعر تنازليًا">Prix décroissant</option>
+        </select>
+      </label>
+    </div>
+  </div>
+  <div id="resultats" class="quartiers"></div>
+  <button type="button" id="plus" class="plus" hidden></button>
+</main>
+
+<footer class="pied">
+  <p data-fr="Les annonces restent celles de leurs auteurs : « Voir l’annonce » ouvre l’annonce d’origine. Prix et surfaces tels qu’ils sont publiés." data-ar="الإعلانات تبقى ملكًا لأصحابها: «شاهد الإعلان» يفتح الإعلان الأصلي. الأسعار والمساحات كما نُشرت.">Les annonces restent celles de leurs auteurs : « Voir l’annonce » ouvre l’annonce d’origine. Prix et surfaces tels qu’ils sont publiés.</p>
+  <p class="credit"><span data-fr="Photo : Cité Ennasr, par Noomen9, Wikimedia Commons (domaine public)." data-ar="الصورة: حي النصر، Noomen9، ويكيميديا كومنز (ملك عام).">Photo : Cité Ennasr, par Noomen9, Wikimedia Commons (domaine public).</span></p>
+</footer>
+
+<script src="donnees/index.js?v=33799fcef2" defer></script>
+<script src="assets/comprendre.js?v=1" defer></script>
+<script src="assets/agent.js?v=2" defer></script>
+</body>
+</html>

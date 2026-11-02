@@ -1,0 +1,12 @@
+{
+  "id": "/?app=mon-agent-immobilier",
+  "name": "Mon agent immobilier",
+  "short_name": "Mon agent",
+  "description": "Trouvez votre bien en une phrase, partout en Tunisie.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0F5BD8",
+  "lang": "fr",
+  "icons": [{"src": "assets/icone.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}]
+}

@@ -1,0 +1,46 @@
+# Annonces du jour : relues deux fois par jour, testées, puis publiées. Le moteur (robot + tests) est dans un dépôt privé, lu avec une
+# clé en lecture seule (secret CLE_MOTEUR). Source en panne : les anciennes annonces restent ; rouge seulement après 2 jours.
+name: maj
+on:
+  schedule:
+    - cron: "40 9 * * *"
+    - cron: "40 17 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: { group: maj, cancel-in-progress: false }
+jobs:
+  maj:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with: { repository: Ah6259/mai-moteur, ssh-key: "${{ secrets.CLE_MOTEUR }}", path: moteur }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - name: Lire les annonces
+        id: lire
+        env: { SOURCE_DONNEES: "${{ secrets.SOURCE_DONNEES }}", SITE_DIR: "${{ github.workspace }}" }
+        run: |
+          if python moteur/robot/construire.py; then echo "neuf=1" >> "$GITHUB_OUTPUT"; exit 0; fi
+          python - <<'PY'
+          import json, datetime as dt, sys
+          s = open("donnees/index.js", encoding="utf-8").read()
+          maj = json.loads(s[s.index("{"):s.rstrip().rstrip(";").rindex("}") + 1])["maj"]
+          age = (dt.date.today() - dt.date.fromisoformat(maj)).days
+          print(f"Source indisponible : annonces du {maj} gardées ({age} jour(s)).")
+          sys.exit(1 if age > 2 else 0)
+          PY
+      - name: Tests
+        env: { SITE_DIR: "${{ github.workspace }}" }
+        run: cd moteur && npm install --no-save --no-package-lock jsdom@24 > /dev/null 2>&1 && node tools/test_site.mjs
+      - name: Publier si les annonces ont changé
+        if: steps.lire.outputs.neuf == '1'
+        run: |
+          git config user.name "robot" && git config user.email "robot@users.noreply.github.com"
+          git add -A donnees index.html
+          git diff --cached --quiet && { echo "rien de neuf"; exit 0; }
+          git commit -q -m "Annonces du $(date +%d/%m/%Y)" && git push -q

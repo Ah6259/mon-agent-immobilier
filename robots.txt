@@ -1,0 +1,12 @@
+User-agent: GPTBot
+Disallow: /
+User-agent: CCBot
+Disallow: /
+User-agent: Bytespider
+Disallow: /
+User-agent: ClaudeBot
+Disallow: /
+User-agent: *
+Allow: /
+Disallow: /donnees/
+Sitemap: https://monagent.clicvia.com/sitemap.xml

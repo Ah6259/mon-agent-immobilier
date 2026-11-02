@@ -1,0 +1,14 @@
+name: tests
+on: { push: { branches: [main] }, workflow_dispatch: {} }
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with: { repository: Ah6259/mai-moteur, ssh-key: "${{ secrets.CLE_MOTEUR }}", path: moteur }
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - env: { SITE_DIR: "${{ github.workspace }}" }
+        run: cd moteur && npm install --no-save --no-package-lock jsdom@24 > /dev/null 2>&1 && node tools/test_site.mjs
