@@ -213,3 +213,7 @@ body.compacte .rangee .carte { flex: none; }
   .outils-droite { flex-wrap: nowrap; width: 100%; justify-content: space-between; }
   .tri > span { display: none; }
 }
+
+/* « Vacances · N » : locations à la nuit / au jour, proposées à part (jamais mêlées aux loyers au mois) */
+.tuile-court { background: #FFF7E6; }
+.tuile-court .tuile-titre { color: #8A5300; }

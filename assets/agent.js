@@ -1,6 +1,7 @@
 /* Mon agent immobilier — recherche et affichage (accueil « D », cartes « F6 », « Vue compacte » F5 ; choix d'Ahmed du 02/11/2026).
    Données : window.MAI (donnees/index.js) ; compréhension : assets/comprendre.js. Rien n'est envoyé : tout se passe dans le navigateur.
-   Une ligne d'annonce : [id, vente(1)/location(0), type, gouvernorat, quartier, prix, surface, pièces, atouts (bits), sorte, étage, âge (jours), photo] */
+   Une ligne d'annonce : [id, vente(1)/location(0), type, gouvernorat, quartier, prix, surface, pièces, atouts (bits), sorte, étage, âge (jours), photo,
+   période du loyer (0 au mois, 1 nuit, 2 jour, 3 autre période courte)] */
 (function () {
   "use strict";
   var D = window.MAI, C = window.MAI_COMPRENDRE;
@@ -22,6 +23,10 @@
   var NOM_ATOUT = [["vue mer", "إطلالة على البحر"], ["piscine", "مسبح"], ["jardin", "حديقة"], ["garage", "مستودع سيارة"], ["ascenseur", "مصعد"],
     ["terrasse", "تراس"], ["meublé", "مفروش"], ["neuf", "جديد"]];
   var STRICTES = {studio: 1, duplex: 1, penthouse: 1, etage_villa: 1};
+  var NOM_PER = {};
+  function nomsPer() { NOM_PER = {n: T("à la nuit", "بالليلة"), j: T("à la journée", "باليوم"), m: T("au mois", "بالشهر"), c: T("courte durée", "مدة قصيرة")}; }
+  nomsPer();
+  var UNITE = function (a) { return a[1] === 1 ? "" : [T(" / mois", " / الشهر"), T(" / nuit", " / الليلة"), T(" / jour", " / اليوم"), ""][a[13] || 0]; };
   var PAR_PAGE = 24;
   function nomType(y) { return LANG === "ar" ? NOM_TYPE[y][1] : NOM_TYPE[y][0]; }
   function nomSorte(s) { return LANG === "ar" ? NOM_SORTE[s][1] : NOM_SORTE[s][0]; }
@@ -53,6 +58,9 @@
     var out = [], marge = as.prix ? 0.15 : 0, margeS = as.prix ? 0.25 : 0;
     var zones = as.zone === 1 ? elargir(q.zones, "d") : as.zone === 2 ? elargir(q.zones, "g") : q.zones;
     if (q.t) out.push({nom: q.t === "v" ? T("à vendre", "للبيع") : T("à louer", "للكراء"), ok: function (a) { return a[1] === (q.t === "v" ? 1 : 0); }});
+    // période (02/11/2026, Ahmed) : sans période écrite, une location est AU MOIS (les locations à la nuit / au jour sont proposées à part)
+    if (q.per) out.push({nom: NOM_PER[q.per], ok: function (a) { return a[1] === 0 && (q.per === "m" ? a[13] === 0 : q.per === "c" ? a[13] > 0 : a[13] === (q.per === "n" ? 1 : 2)); }});
+    else out.push({nom: "", cache: 1, ok: function (a) { return a[1] === 1 || !a[13]; }});
     if (q.types.length) {
       var ti = q.types.map(function (y) { return TYPES.indexOf(y); });
       out.push({nom: q.types.map(nomType).join(T(" ou ", " أو ")).toLowerCase(), ok: function (a) { return ti.indexOf(a[2]) >= 0; }});
@@ -126,9 +134,9 @@
 
   // ---------------------------------------------------------------- cartes « F6 »
   function prix(a) {
-    if (a[5] === null) return E(T("Prix sur demande", "السعر عند الطلب"));
+    if (a[5] === null) return E(a[13] === 3 ? T("Prix selon la période", "السعر حسب المدة") : T("Prix sur demande", "السعر عند الطلب"));
     var v = a[5], s = v >= 1e6 ? (v / 1e6).toLocaleString("fr-FR", {maximumFractionDigits: 2}) + T(" M DT", " م د") : nb(v) + T(" DT", " د");
-    return E(s) + (a[1] === 0 ? "<small>" + E(T(" / mois", " / الشهر")) + "</small>" : "");
+    return E(s) + (UNITE(a) ? "<small>" + E(UNITE(a)) + "</small>" : "");
   }
   function age(j) {
     if (j === 0) return T("aujourd’hui", "اليوم");
@@ -154,11 +162,11 @@
     var lieu = a[4] >= 0 ? nomQ(a[4]) : nomG(a[3]);
     if (lieu) ligne.push(E(lieu));
     // ce qui correspond à la phrase du visiteur (barré : critère assoupli pour proposer quand même)
-    var corr = cs.map(function (c) { var bon = c.vrai ? c.vrai(a) : c.ok(a); return '<span class="' + (bon ? "oui" : "non") + '">' + (bon ? "✓ " : "") + E(c.nom) + "</span>"; });
+    var corr = cs.filter(function (c) { return !c.cache; }).map(function (c) { var bon = c.vrai ? c.vrai(a) : c.ok(a); return '<span class="' + (bon ? "oui" : "non") + '">' + (bon ? "✓ " : "") + E(c.nom) + "</span>"; });
     var demandes = cs.map(function (c) { return c.nom; }), plus = [];
     for (var k = 0; k < 8; k++) if ((a[8] & (1 << k)) && demandes.indexOf(nomAtout(k)) < 0) plus.push(nomAtout(k));
     if (a[10] !== null && a[10] !== undefined && !cs.some(function (c) { return /étage|rez|الطابق|طابق/.test(c.nom); })) plus.push(a[10] === 0 ? T("rez-de-chaussée", "طابق أرضي") : T("étage " + a[10], "الطابق " + a[10]));
-    return '<article class="carte" data-id="' + E(a[0]) + '"><a class="carte-lien" href="#" target="_blank" rel="noopener noreferrer">' +
+    return '<article class="carte" data-id="' + E(a[0]) + '"><a class="carte-lien" href="#" rel="noopener noreferrer">' +
       '<div class="carte-photo' + (a[12] ? "" : " sans") + '">' + (a[12] ? "" : '<span class="sans-photo">' + ICONE_TYPE[TYPES[a[2]]] + "<em>" + E(T("Pas de photo", "بدون صورة")) + "</em></span>") + '<span class="carte-badge">' + E(a[1] ? T("À vendre", "للبيع") : T("À louer", "للكراء")) + "</span></div>" +
       '<div class="carte-corps"><p class="carte-prix">' + prix(a) + "</p>" +
       '<p class="carte-ligne">' + ligne.join(" · ") + "</p>" +
@@ -189,6 +197,7 @@
   function pastilles(q) {
     var p = [];
     if (q.t) p.push(["t", q.t === "v" ? T("Achat", "شراء") : T("Location", "كراء")]);
+    if (q.per) p.push(["per", NOM_PER[q.per]]);
     q.types.forEach(function (y) { p.push(["types:" + y, nomType(y)]); });
     q.sortes.forEach(function (s) { p.push(["sortes:" + s, nomSorte(s)]); });
     if (q.c !== null) p.push(["c", "S+" + q.c]);
@@ -206,7 +215,7 @@
   }
   function retirerCritere(q, cle) {
     var c = cle.split(":"), k = c[0], v = c[1];
-    if (k === "t") q.t = null; else if (k === "c") q.c = null; else if (k === "cMin") q.cMin = null; else if (k === "et") q.et = null;
+    if (k === "t") { q.t = null; q.per = null; } else if (k === "per") q.per = null; else if (k === "c") q.c = null; else if (k === "cMin") q.cMin = null; else if (k === "et") q.et = null;
     else if (k === "prix") { q.pMin = q.pMax = null; } else if (k === "surface") { q.sMin = q.sMax = null; }
     else if (k === "types" || k === "sortes") q[k] = q[k].filter(function (x) { return x !== v; });
     else if (k === "at" || k === "sansAt") q[k] = q[k].filter(function (x) { return String(x) !== v; });
@@ -268,6 +277,16 @@
     if (q.vide) phrase = T("Je n’ai pas reconnu de critère.", "لم أفهم أي شرط.") + " " + T("Essayez par exemple « S+2 à La Marsa avec parking ».", "جرّب مثلًا « S+2 في المرسى مع باركينغ ».");
     else if (!l.length) phrase = T("Aucune annonce ne correspond pour l’instant.", "لا يوجد إعلان مطابق حاليًا.") + " " + T("Retirez un critère, ou revenez demain : les annonces sont mises à jour chaque jour.", "أزل شرطًا أو عُد غدًا: الإعلانات تُحدَّث يوميًا.");
     else phrase = l.length + " " + texteCritere(q, l.length) + (gs.length > 1 ? T(", dans ", "، في ") + gs.length + T(" quartiers.", " أحياء.") : ".");
+    var uLoc = q.per === "n" ? T(" / nuit", " / الليلة") : q.per === "j" ? T(" / jour", " / اليوم") : q.per === "c" ? "" : T(" / mois", " / الشهر");
+    // locations à la nuit / au jour : jamais mêlées aux loyers au mois ; l'agent dit qu'il y en a et propose de les voir
+    var court = "";
+    if (!q.per && q.t !== "v" && !q.vide) {
+      var qc = {}; for (var c in q) qc[c] = q[c];
+      qc.per = "c"; qc.t = "l";
+      var nc = filtrer(qc).length;
+      if (nc) court = '<button type="button" class="tuile tuile-court" data-ajout="' + E(T(" à la nuit", " بالليلة")) + '"><span class="tuile-titre">' + E(T("Vacances · ", "عطلة · ") + nc) + "</span>" +
+        '<span class="tuile-aide">' + E(T("location à la nuit ou au jour : voir", "كراء بالليلة أو باليوم: شاهد")) + "</span></button>";
+    }
     var tuile = function (t, liste, titre, unite) {
       if (!liste.length) return "";
       var p = prixListe(liste), m = milieu(p);
@@ -276,8 +295,8 @@
     };
     z.innerHTML = '<div class="resume-agent"><span class="resume-sur">' + E(T("Votre agent a trouvé", "وكيلك وجد")) + '</span><p class="resume-phrase">' + E(phrase) + "</p>" +
       (res.assoupli ? '<p class="assoupli">' + E(T("Aucune annonce exacte : voici les plus proches, ", "لا يوجد تطابق تام: هذه الأقرب، ") + res.assoupli) + ".</p>" : "") + compris + "</div>" +
-      (!q.t && nL.length && nV.length ? tuile("l", nL, T("À louer", "للكراء"), T(" / mois", " / الشهر")) + tuile("v", nV, T("À vendre", "للبيع"), "") :
-        (l.length ? tuile(nL.length ? "l" : "v", nL.length ? nL : nV, nL.length ? T("À louer", "للكراء") : T("À vendre", "للبيع"), nL.length ? T(" / mois", " / الشهر") : "") : ""));
+      (!q.t && nL.length && nV.length ? tuile("l", nL, T("À louer", "للكراء"), uLoc) + tuile("v", nV, T("À vendre", "للبيع"), "") :
+        (l.length ? tuile(nL.length ? "l" : "v", nL.length ? nL : nV, nL.length ? T("À louer", "للكراء") : T("À vendre", "للبيع"), nL.length ? uLoc : "") : "")) + court;
     $("outils").hidden = l.length < 2;
     var liste = etat.onglet ? l.filter(function (a) { return a[1] === (etat.onglet === "v" ? 1 : 0); }) : l;
     etat.liste = trier(liste, q, etat.ordre);
@@ -322,6 +341,26 @@
     });
   }
 
+  // retour depuis une annonce (02/11/2026, Ahmed : « revenir à la liste pour sélectionner une autre carte ») : même recherche, même quartier,
+  // même tri, même endroit de la page
+  function memoriser() {
+    try {
+      sessionStorage.setItem("mai-retour", JSON.stringify({texte: etat.texte, onglet: etat.onglet, quartier: etat.quartier, retires: etat.retires,
+        ordre: etat.ordre, montres: etat.montres, y: window.scrollY || 0}));
+    } catch (e) { /* stockage refusé : la recherche revient quand même (adresse ?q=) */ }
+  }
+  function restaurer() {
+    var m;
+    try { m = JSON.parse(sessionStorage.getItem("mai-retour") || "null"); } catch (e) { m = null; }
+    if (!m || m.texte !== etat.texte) return;
+    etat.retires = m.retires || []; etat.onglet = m.onglet || ""; etat.ordre = m.ordre || "pertinence";
+    $("tri-choix").value = etat.ordre;
+    lancer(etat.texte, true);
+    if (m.quartier) { etat.quartier = m.quartier; etat.montres = 0; $("resultats").innerHTML = ""; afficherSuite(); }
+    for (var k = 0; k < 40 && etat.montres < m.montres && !$("plus").hidden; k++) afficherSuite();
+    setTimeout(function () { window.scrollTo(0, m.y || 0); }, 30);
+  }
+
   // ---------------------------------------------------------------- textes de la page (FR / AR)
   var EXEMPLES = [
     ["S+1 à La Manouba", "S+1 في منوبة"],
@@ -362,14 +401,17 @@
     textes(); majVue();
     var f = $("barre"), q = $("q"), minuterie = null;
     f.addEventListener("submit", function (e) { e.preventDefault(); q.blur(); lancer(q.value); window.scrollTo({top: 0, behavior: "smooth"}); });
-    q.addEventListener("input", function () { clearTimeout(minuterie); minuterie = setTimeout(function () { lancer(q.value); }, 350); });
+    q.addEventListener("input", function () { $("effacer").hidden = !q.value; });
     $("resume").addEventListener("click", function (e) {
       var b = e.target.closest(".pastille");
       if (b) { etat.retires.push(b.getAttribute("data-cle")); lancer(etat.texte, true); return; }
+      var aj = e.target.closest("[data-ajout]");
+      if (aj) { q.value = etat.texte.trim() + aj.getAttribute("data-ajout"); lancer(q.value); return; }
       var t = e.target.closest(".tuile");
       if (t) { etat.onglet = etat.onglet === t.getAttribute("data-t") ? "" : t.getAttribute("data-t"); etat.quartier = ""; afficher(); }
     });
     $("resultats").addEventListener("click", function (e) {
+      if (e.target.closest(".carte-lien")) memoriser();
       var v = e.target.closest(".voir-quartier"), r = e.target.closest(".retour");
       if (v) { etat.quartier = v.getAttribute("data-q"); etat.montres = 0; $("resultats").innerHTML = ""; afficherSuite(); window.scrollTo({top: $("outils").offsetTop - 80, behavior: "smooth"}); }
       if (r) { etat.quartier = ""; afficher(); }
@@ -381,7 +423,7 @@
     $("langue").addEventListener("click", function () {
       LANG = LANG === "ar" ? "fr" : "ar";
       try { localStorage.setItem("mai-langue", LANG); } catch (e) { /* stockage refusé */ }
-      textes(); lancer(q.value, true);
+      nomsPer(); textes(); lancer(q.value, true);
     });
     // dictée vocale (Chrome, Android)
     var R = window.SpeechRecognition || window.webkitSpeechRecognition, micro = $("micro");
@@ -396,7 +438,7 @@
       });
     }
     var m = /[?&]q=([^&]*)/.exec(location.search);
-    if (m) { try { q.value = decodeURIComponent(m[1].replace(/\+/g, " ")); } catch (e) { q.value = ""; } lancer(q.value); }
+    if (m) { try { q.value = decodeURIComponent(m[1].replace(/\+/g, " ")); } catch (e) { q.value = ""; } lancer(q.value); restaurer(); }
     machine();
     document.body.classList.add("pret");
   }

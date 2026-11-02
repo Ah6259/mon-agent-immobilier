@@ -18,7 +18,7 @@
   function sansArticle(w) { return w.replace(/^(la|le|les|el|l|al|cite|cité)\s+/, "").replace(/^ال(?=..)/, ""); }
 
   // ---- vocabulaire (formes normalisées, sans doubles lettres)
-  var LOUER = ["louer", "location", "loue", "loyer", "a louer", "kra", "kraa", "kiraa", "lel kra", "lil kra", "كراء", "للكراء", "ايجار", "للايجار", "par mois", "mensuel", "annuel", "vacances", "saison", "nuit"];
+  var LOUER = ["louer", "location", "loue", "loyer", "a louer", "kra", "kraa", "kiraa", "lel kra", "lil kra", "كراء", "للكراء", "ايجار", "للايجار"];
   var VENDRE = ["vendre", "vente", "achat", "acheter", "acquerir", "a vendre", "bi3", "lel bi3", "lil bi3", "nbi3", "chri", "nechri", "nichri", "بيع", "للبيع", "شراء", "نشري", "نبيع"];
   var TYPES = [
     ["appartement", ["appartement", "apartement", "appart", "appt", "apt", "app", "studio", "penthouse", "chka", "chekka", "شقه", "ستوديو"]],
@@ -43,6 +43,15 @@
     ["terrasse", ["terrasse", "تراس", "سطح"]],
     ["meuble", ["meuble", "meublee", "meubles", "مفروش", "مفروشه", "مفروشة"]],
     ["neuf", ["neuf", "neuve", "nouvelle construction", "jamais habite", "jamais habitee", "jdid", "jdida", "جديد", "جديده"]]
+  ];
+  // période d'une location (02/11/2026, Ahmed : « location par jour ou par mois doit être possible de l'écrire ») : n = nuit, j = jour,
+  // m = au mois / à l'année, c = vacances / saison (toute période courte) ; la phrase la plus longue d'abord
+  var PERIODES = [
+    ["n", ["par nuit", "la nuit", "a la nuit", "nuitee", "nuitees", "nuit", "nuits", "par nuitee", "fil lil", "lil", "بالليله", "لليله", "الليله", "ليله", "في الليله"]],
+    ["j", ["par jour", "la journee", "a la journee", "par journee", "journee", "jour", "jours", "b nhar", "bel nhar", "nhar", "yom", "باليوم", "لليوم", "في اليوم", "بالنهار", "يوم", "نهار"]],
+    ["m", ["par mois", "au mois", "le mois", "mensuel", "mensuelle", "a l annee", "l annee", "annuel", "annuelle", "longue duree", "b chhar", "bel chhar", "chhar", "par an",
+      "شهري", "بالشهر", "في الشهر", "الشهر", "سنوي", "بالعام"]],
+    ["c", ["vacances", "vacance", "saisonnier", "saisonniere", "saison", "estival", "estivale", "courte duree", "par semaine", "semaine", "ete", "sif", "صيفي", "مصيف", "للعطله", "عطله", "اسبوع"]]
   ];
   var MOTS_VIDES = ["avec", "sans", "pour", "dans", "chez", "une", "un", "des", "de", "du", "le", "la", "les", "et", "ou", "a", "au", "aux", "en", "je", "cherche", "recherche",
     "veux", "voudrais", "besoin", "bien", "region", "quartier", "zone", "ville", "pres", "proche", "cote", "centre", "pas", "cher", "prix", "budget", "tres", "bon", "bonne",
@@ -124,7 +133,7 @@
   }
 
   function comprendre(texte, D) {
-    var r = {t: null, types: [], sortes: [], c: null, cMin: null, pMin: null, pMax: null, sMin: null, sMax: null,
+    var r = {t: null, per: null, types: [], sortes: [], c: null, cMin: null, pMin: null, pMax: null, sMin: null, sMax: null,
              at: [], sansAt: [], et: null, zones: [], mots: [], vide: true};
     var t = norm(texte);
     if (!t) return r;
@@ -156,6 +165,12 @@
         poser(nombre(m[1]), m[2], "max"); r.pMax = Math.round(r.pMax * 1.1); t = t.replace(m[0], " ");
       }
     }
+    // période de location (avant « louer » : « par mois » n'est pas un nom de lieu ni un prix)
+    var tousPer = [];
+    PERIODES.forEach(function (x) { x[1].forEach(function (w) { tousPer.push([norm(w), x[0]]); }); });
+    tousPer.sort(function (a, b) { return b[0].length - a[0].length; });
+    tousPer.forEach(function (x) { if (contient(t, x[0])) { if (!r.per) r.per = x[1]; t = retirer(t, x[0]); } });
+    if (r.per) r.t = "l";
     // transaction
     LOUER.forEach(function (w) { if (contient(t, w)) { r.t = "l"; t = retirer(t, w); } });
     VENDRE.forEach(function (w) { if (contient(t, w)) { r.t = r.t === "l" ? null : "v"; t = retirer(t, w); } });
