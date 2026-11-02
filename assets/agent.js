@@ -336,7 +336,6 @@
     [].forEach.call(document.querySelectorAll("[data-fr]"), function (el) { el.textContent = LANG === "ar" ? el.getAttribute("data-ar") : el.getAttribute("data-fr"); });
     $("langue").textContent = LANG === "ar" ? "FR" : "ع";
     $("langue").setAttribute("aria-label", LANG === "ar" ? "Français" : "العربية");
-    $("exemples").innerHTML = EXEMPLES.slice(0, 1).map(function (x) { return '<button type="button" class="exemple" dir="auto">' + E(LANG === "ar" ? x[1] : x[0]) + "</button>"; }).join("");
     $("nb-annonces").textContent = D && D.n ? nb(D.n) : "—";
   }
   // phrase d'exemple qui s'écrit toute seule dans la barre vide
@@ -364,7 +363,6 @@
     var f = $("barre"), q = $("q"), minuterie = null;
     f.addEventListener("submit", function (e) { e.preventDefault(); q.blur(); lancer(q.value); window.scrollTo({top: 0, behavior: "smooth"}); });
     q.addEventListener("input", function () { clearTimeout(minuterie); minuterie = setTimeout(function () { lancer(q.value); }, 350); });
-    $("exemples").addEventListener("click", function (e) { var b = e.target.closest(".exemple"); if (b) { q.value = b.textContent; lancer(q.value); } });
     $("resume").addEventListener("click", function (e) {
       var b = e.target.closest(".pastille");
       if (b) { etat.retires.push(b.getAttribute("data-cle")); lancer(etat.texte, true); return; }
