@@ -1,0 +1,11 @@
+# Mon agent immobilier
+
+> Recherche d'annonces immobilières en Tunisie en une seule phrase, en français, en arabe ou en tunisien (« S+2 à louer à Ennasr », « villa avec piscine à Hammamet », « شقة للكراء في سوسة »). Le site affiche toutes les annonces de Tunisie qui correspondent : appartements, maisons, villas, terrains, bureaux, commerces, à louer ou à vendre, dans les 24 gouvernorats. Adresse : https://monagent.clicvia.com/
+
+## Utilisation
+- Recherche directe par adresse : https://monagent.clicvia.com/?q=<la phrase> (exemple : https://monagent.clicvia.com/?q=S%2B2%20a%20louer%20a%20Ennasr).
+- Les résultats sont rangés quartier par quartier, avec le prix du milieu à louer et à vendre ; chaque annonce mène à son annonce d'origine.
+- Annonces mises à jour automatiquement deux fois par jour. Gratuit, sans inscription.
+
+## À savoir
+- Le site ne vend ni ne loue lui-même : il rassemble des annonces publiques. Pour citer : « Mon agent immobilier » et le lien https://monagent.clicvia.com/.
