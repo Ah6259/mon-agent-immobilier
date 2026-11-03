@@ -425,18 +425,7 @@
       try { localStorage.setItem("mai-langue", LANG); } catch (e) { /* stockage refusé */ }
       nomsPer(); textes(); lancer(q.value, true);
     });
-    // dictée vocale (Chrome, Android)
-    var R = window.SpeechRecognition || window.webkitSpeechRecognition, micro = $("micro");
-    if (R && micro) {
-      micro.hidden = false;
-      micro.addEventListener("click", function () {
-        var rec = new R(); rec.lang = LANG === "ar" ? "ar-TN" : "fr-FR"; rec.interimResults = true;
-        micro.classList.add("ecoute");
-        rec.onresult = function (e) { q.value = [].map.call(e.results, function (x) { return x[0].transcript; }).join(" "); lancer(q.value); };
-        rec.onend = rec.onerror = function () { micro.classList.remove("ecoute"); };
-        rec.start();
-      });
-    }
+    // micro (dictée vocale) RETIRÉ le 03/11/2026 à la demande d'Ahmed : il ne fonctionnait pas bien
     var m = /[?&]q=([^&]*)/.exec(location.search);
     if (m) { try { q.value = decodeURIComponent(m[1].replace(/\+/g, " ")); } catch (e) { q.value = ""; } lancer(q.value); restaurer(); }
     machine();

@@ -41,10 +41,6 @@ button, input, select { font: inherit; color: inherit; }
 .barre input::placeholder { color: var(--gris-clair); }
 .barre input::-webkit-search-cancel-button { display: none; }
 .effacer { width: 40px; height: 40px; flex: none; border: 0; border-radius: 999px; background: transparent; color: var(--gris-clair); font-size: 26px; cursor: pointer; }
-.micro { width: 52px; height: 52px; flex: none; display: grid; place-items: center; border-radius: 999px; border: 1px solid var(--trait); background: var(--fond); cursor: pointer; }
-.micro svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
-.micro.ecoute { background: var(--bleu); color: var(--blanc); border-color: var(--bleu); animation: battre 1.2s ease-in-out infinite; }
-@keyframes battre { 50% { box-shadow: 0 0 0 8px rgba(15,91,216,.18); } }
 .chercher { height: 52px; flex: none; padding: 0 26px; border-radius: 999px; border: 0; background: var(--bleu); color: var(--blanc); font-size: 17px; font-weight: 700; cursor: pointer; }
 .chercher:hover { background: var(--bleu-fonce); }
 .exemples { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 880px; }
@@ -54,7 +50,7 @@ button, input, select { font: inherit; color: inherit; }
 .chiffres div { display: flex; flex-direction: column; gap: 6px; }
 .chiffres strong { font-size: 34px; font-weight: 800; color: var(--bleu); }
 .chiffres span { color: var(--gris); }
-@media (max-width: 720px) { .chiffres { grid-template-columns: 1fr; gap: 18px; padding-top: 32px; } .chercher { padding: 0 18px; } .micro { width: 46px; height: 46px; } }
+@media (max-width: 720px) { .chiffres { grid-template-columns: 1fr; gap: 18px; padding-top: 32px; } .chercher { padding: 0 18px; } }
 @media (max-width: 480px) {
   .barre { flex-wrap: wrap; border-radius: 22px; padding: 8px; }
   .barre-loupe { display: none; }
@@ -78,7 +74,6 @@ body.a-cherche .titre, body.a-cherche .sous-titre, body.a-cherche .exemples { di
 body.a-cherche .barre { max-width: none; box-shadow: none; border: 1px solid var(--trait-fort); padding: 4px 4px 4px 16px; }
 body.a-cherche .barre input { height: 44px; font-size: 17px; }
 body.a-cherche .chercher { height: 44px; padding: 0 20px; font-size: 15px; }
-body.a-cherche .micro { width: 44px; height: 44px; }
 @media (max-width: 640px) { body.a-cherche .tete { flex: 1 1 100%; } body.a-cherche .logo span { font-size: 16px; } }
 
 /* l'agent répond */
@@ -197,7 +192,6 @@ body.compacte .rangee .carte { flex: none; }
   body.a-cherche .barre { flex-wrap: nowrap; border-radius: 999px; padding: 4px 4px 4px 14px; }
   body.a-cherche .barre input { flex: 1 1 auto; height: 42px; padding: 0; font-size: 16px; }
   body.a-cherche .chercher { flex: none; height: 42px; padding: 0 14px; font-size: 14px; }
-  body.a-cherche .micro { width: 42px; height: 42px; }
   body.a-cherche .effacer { width: 32px; }
   body.a-cherche .hero { gap: 8px; }
 }
