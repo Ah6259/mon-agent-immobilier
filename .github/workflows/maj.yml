@@ -43,4 +43,7 @@ jobs:
           git config user.name "robot" && git config user.email "robot@users.noreply.github.com"
           git add -A donnees index.html
           git diff --cached --quiet && { echo "rien de neuf"; exit 0; }
-          git commit -q -m "Annonces du $(date +%d/%m/%Y)" && git push -q
+          git commit -q -m "Annonces du $(date +%d/%m/%Y)"
+          # se mettre à jour avant d'envoyer (contrôle commun, 02/11/2026) ; 4 essais
+          for essai in 1 2 3 4; do git pull --rebase --autostash -q && git push -q && exit 0; sleep $((essai * 5)); done
+          echo "ÉCHEC : annonces non enregistrées"; exit 1
