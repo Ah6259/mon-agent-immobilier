@@ -179,8 +179,9 @@
     details(art.getAttribute("data-id")).then(function (d) {
       if (!d) { art.classList.add("indisponible"); return; }
       art.querySelector(".carte-lien").href = d.u;
-      if (!d.ph) return;
-      var ph = art.querySelector(".carte-photo"), img = new Image();
+      // 03/11/2026 : la réponse peut arriver après le départ de la page (carte retirée, page fermée) -> rien à faire
+      if (!d.ph || !art.isConnected) return;
+      var ph = art.querySelector(".carte-photo"), img = art.ownerDocument.createElement("img");
       img.alt = ""; img.loading = "lazy"; img.decoding = "async"; img.referrerPolicy = "no-referrer";
       img.onload = function () { ph.classList.add("chargee"); };
       img.onerror = function () { ph.classList.add("sans"); img.remove(); };
