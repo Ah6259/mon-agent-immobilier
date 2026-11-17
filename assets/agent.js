@@ -374,6 +374,8 @@
     document.documentElement.lang = LANG;
     document.documentElement.dir = LANG === "ar" ? "rtl" : "ltr";
     [].forEach.call(document.querySelectorAll("[data-fr]"), function (el) { el.textContent = LANG === "ar" ? el.getAttribute("data-ar") : el.getAttribute("data-fr"); });
+    // liens du pied (Confidentialité, Conditions d'utilisation : pages communes, 17/11/2026) : adresse dans la langue de la page
+    [].forEach.call(document.querySelectorAll("[data-href-ar]"), function (el) { el.setAttribute("href", LANG === "ar" ? el.getAttribute("data-href-ar") : el.getAttribute("data-href-fr")); });
     $("langue").textContent = LANG === "ar" ? "FR" : "ع";
     $("langue").setAttribute("aria-label", LANG === "ar" ? "Français" : "العربية");
     $("nb-annonces").textContent = D && D.n ? nb(D.n) : "—";

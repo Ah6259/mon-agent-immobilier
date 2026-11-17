@@ -150,6 +150,7 @@ body.compacte .carte-pied { padding-top: 0; }
 
 .pied { padding: 28px clamp(16px, 4vw, 56px) 40px; text-align: center; color: var(--gris-clair); font-size: 13px; }
 .pied p { max-width: 760px; margin: 0 auto 6px; }
+.pied .liens-pied a { color: inherit; text-decoration: underline; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 
 /* ------------------------------------------------------------ résultats « E3 » : le résumé de l'agent, puis quartier par quartier */
