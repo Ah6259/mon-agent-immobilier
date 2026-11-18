@@ -5,6 +5,22 @@
 (function () {
   "use strict";
   var D = window.MAI, C = window.MAI_COMPRENDRE;
+  // 19/11/2026 (Ahmed, CV.3b « accueil léger ») : la liste des annonces (donnees/index.js, ~700 Ko) n'est plus chargée avec la page
+  // (5,7 s avant d'être prête sur un téléphone moyen) mais au 1er geste : toucher la barre, envoyer une phrase, ou tout de suite si
+  // l'adresse porte une recherche (?q=). Le nombre d'annonces affiché vient de <body data-n> (écrit par le robot).
+  var attente = [], enCours = false;
+  function donnees(fin) {
+    if (D) { if (fin) fin(); return; }
+    if (fin) attente.push(fin);
+    if (enCours) return;
+    enCours = true;
+    var s = document.createElement("script");
+    s.src = document.body.getAttribute("data-donnees") || "donnees/index.js";
+    s.onload = function () { D = window.MAI; enCours = false; var f = attente; attente = []; f.forEach(function (x) { x(); }); };
+    s.onerror = function () { enCours = false; attente = []; s.remove();
+      $("resume").innerHTML = '<p class="vide">' + E(T("Chargement impossible. Vérifiez la connexion et réessayez.", "تعذر التحميل. تحقق من الاتصال وأعد المحاولة.")) + "</p>"; };
+    document.head.appendChild(s);
+  }
   var $ = function (id) { return document.getElementById(id); };
   var LANG = "fr";
   try { LANG = localStorage.getItem("mai-langue") === "ar" ? "ar" : "fr"; } catch (e) { /* stockage refusé */ }
@@ -378,7 +394,8 @@
     [].forEach.call(document.querySelectorAll("[data-href-ar]"), function (el) { el.setAttribute("href", LANG === "ar" ? el.getAttribute("data-href-ar") : el.getAttribute("data-href-fr")); });
     $("langue").textContent = LANG === "ar" ? "FR" : "ع";
     $("langue").setAttribute("aria-label", LANG === "ar" ? "Français" : "العربية");
-    $("nb-annonces").textContent = D && D.n ? nb(D.n) : "—";
+    var nA = D && D.n ? D.n : +document.body.getAttribute("data-n");
+    $("nb-annonces").textContent = nA ? nb(nA) : "—";
   }
   // phrase d'exemple qui s'écrit toute seule dans la barre vide
   var tape = null;
@@ -397,19 +414,24 @@
 
   // ---------------------------------------------------------------- démarrage
   function demarrer() {
-    if (!D || !D.a || !C) { $("resume").innerHTML = '<p class="vide">' + E(T("Chargement impossible. Rechargez la page.", "تعذر التحميل. أعد تحميل الصفحة.")) + "</p>"; return; }
+    if (!C) { $("resume").innerHTML = '<p class="vide">' + E(T("Chargement impossible. Rechargez la page.", "تعذر التحميل. أعد تحميل الصفحة.")) + "</p>"; return; }
     var compacte = false;
     try { compacte = localStorage.getItem("mai-compacte") === "1"; } catch (e) { /* stockage refusé */ }
     function majVue() { document.body.classList.toggle("compacte", compacte); $("vue-compacte").setAttribute("aria-pressed", String(compacte)); }
     textes(); majVue();
     var f = $("barre"), q = $("q"), minuterie = null;
-    f.addEventListener("submit", function (e) { e.preventDefault(); q.blur(); lancer(q.value); window.scrollTo({top: 0, behavior: "smooth"}); });
+    f.addEventListener("submit", function (e) {
+      e.preventDefault(); q.blur(); window.scrollTo({top: 0, behavior: "smooth"});
+      if (!D) $("resume").innerHTML = '<p class="vide">' + E(T("Un instant…", "لحظة…")) + "</p>";
+      donnees(function () { lancer(q.value); });
+    });
+    ["focus", "pointerdown", "keydown"].forEach(function (ev) { q.addEventListener(ev, function () { donnees(); }, {once: true}); });
     q.addEventListener("input", function () { $("effacer").hidden = !q.value; });
     $("resume").addEventListener("click", function (e) {
       var b = e.target.closest(".pastille");
       if (b) { etat.retires.push(b.getAttribute("data-cle")); lancer(etat.texte, true); return; }
       var aj = e.target.closest("[data-ajout]");
-      if (aj) { q.value = etat.texte.trim() + aj.getAttribute("data-ajout"); lancer(q.value); return; }
+      if (aj) { q.value = etat.texte.trim() + aj.getAttribute("data-ajout"); donnees(function () { lancer(q.value); }); return; }
       var t = e.target.closest(".tuile");
       if (t) { etat.onglet = etat.onglet === t.getAttribute("data-t") ? "" : t.getAttribute("data-t"); etat.quartier = ""; afficher(); }
     });
@@ -422,18 +444,18 @@
     $("plus").addEventListener("click", afficherSuite);
     $("tri-choix").addEventListener("change", function () { etat.ordre = this.value; afficher(); });
     $("vue-compacte").addEventListener("click", function () { compacte = !compacte; try { localStorage.setItem("mai-compacte", compacte ? "1" : "0"); } catch (e) { /* stockage refusé */ } majVue(); });
-    $("effacer").addEventListener("click", function () { q.value = ""; lancer(""); q.focus(); });
+    $("effacer").addEventListener("click", function () { q.value = ""; donnees(function () { lancer(""); }); q.focus(); });
     $("langue").addEventListener("click", function () {
       LANG = LANG === "ar" ? "fr" : "ar";
       try { localStorage.setItem("mai-langue", LANG); } catch (e) { /* stockage refusé */ }
-      nomsPer(); textes(); lancer(q.value, true);
+      nomsPer(); textes(); if (D) lancer(q.value, true);
     });
     // micro (dictée vocale) RETIRÉ le 03/11/2026 à la demande d'Ahmed : il ne fonctionnait pas bien
     var m = /[?&]q=([^&]*)/.exec(location.search);
-    if (m) { try { q.value = decodeURIComponent(m[1].replace(/\+/g, " ")); } catch (e) { q.value = ""; } lancer(q.value); restaurer(); }
+    if (m) { try { q.value = decodeURIComponent(m[1].replace(/\+/g, " ")); } catch (e) { q.value = ""; } donnees(function () { lancer(q.value); restaurer(); }); }
     machine();
     document.body.classList.add("pret");
   }
-  window.MAI_AGENT = {lancer: lancer, chercher: chercher, filtrer: filtrer, criteres: criteres, etat: etat, paquet: paquet};
+  window.MAI_AGENT = {lancer: lancer, chercher: chercher, filtrer: filtrer, criteres: criteres, etat: etat, paquet: paquet, donnees: donnees};
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", demarrer); else demarrer();
 })();
