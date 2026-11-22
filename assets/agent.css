@@ -212,3 +212,24 @@ body.compacte .rangee .carte { flex: none; }
 /* « Vacances · N » : locations à la nuit / au jour, proposées à part (jamais mêlées aux loyers au mois) */
 .tuile-court { background: #FFF7E6; }
 .tuile-court .tuile-titre { color: #8A5300; }
+
+/* ------------------------------------------------------------ 21/11/2026 : texte lisible sans JavaScript (moteurs de recherche) :
+   prix par gouvernorat (écrits par le robot), « comment ça marche », questions fréquentes. Accueil seulement, en français. */
+.reperes, .infos { max-width: 1180px; margin: 0 auto; padding: 8px clamp(16px, 4vw, 56px) 36px; color: var(--texte); }
+.reperes h2, .infos h2 { margin: 0 0 10px; font-size: clamp(21px, 2.4vw, 27px); line-height: 1.25; color: var(--encre); }
+.reperes-intro { margin: 0 0 16px; max-width: 820px; color: var(--gris); }
+.tableau-defile { overflow-x: auto; border: 1px solid var(--trait); border-radius: 16px; }
+.reperes-tableau { width: 100%; border-collapse: collapse; font-size: 15px; font-variant-numeric: tabular-nums; }
+.reperes-tableau th, .reperes-tableau td { padding: 10px 14px; border-bottom: 1px solid var(--trait); text-align: end; white-space: nowrap; }
+.reperes-tableau th:first-child { text-align: start; }
+.reperes-tableau thead th { background: var(--bleu-pale); color: var(--bleu-fonce); font-size: 13px; font-weight: 700; white-space: normal; vertical-align: bottom; }
+.reperes-tableau tbody tr:last-child th, .reperes-tableau tbody tr:last-child td { border-bottom: 0; }
+.reperes-tableau a { color: var(--bleu-fonce); text-decoration: none; }
+.reperes-tableau a:hover { text-decoration: underline; }
+.etapes { margin: 0 0 14px; padding-inline-start: 22px; display: grid; gap: 10px; max-width: 860px; }
+.exemples-liens { margin: 0; line-height: 1.9; }
+.infos details { max-width: 860px; border-bottom: 1px solid var(--trait); }
+.infos summary { min-height: 44px; display: flex; align-items: center; padding: 10px 0; font-weight: 700; color: var(--encre); cursor: pointer; }
+.infos details p { margin: 0 0 14px; }
+@media (max-width: 560px) { .reperes-tableau { font-size: 13px; } .reperes-tableau th, .reperes-tableau td { padding: 9px 6px; } .reperes-tableau thead th { font-size: 12px; } }
+html[lang="ar"] .fr-seul, body.a-cherche .reperes, body.a-cherche .infos { display: none; }

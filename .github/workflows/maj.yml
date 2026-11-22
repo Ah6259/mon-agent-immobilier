@@ -42,7 +42,7 @@ jobs:
         if: steps.lire.outputs.neuf == '1'
         run: |
           git config user.name "robot" && git config user.email "robot@users.noreply.github.com"
-          git add -A donnees index.html
+          git add -A donnees index.html sitemap.xml llms.txt   # 21/11/2026 : plan du site daté et chiffres de llms.txt aussi (le robot les refait)
           git diff --cached --quiet && { echo "rien de neuf"; exit 0; }
           git commit -q -m "Annonces du $(date +%d/%m/%Y)"
           # se mettre à jour avant d'envoyer (contrôle commun, 02/11/2026) ; 4 essais

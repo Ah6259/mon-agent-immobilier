@@ -5,7 +5,22 @@
 ## Utilisation
 - Recherche directe par adresse : https://monagent.clicvia.com/?q=<la phrase> (exemple : https://monagent.clicvia.com/?q=S%2B2%20a%20louer%20a%20Ennasr).
 - Les résultats sont rangés quartier par quartier, avec le prix du milieu à louer et à vendre ; chaque annonce mène à son annonce d'origine.
-- Annonces mises à jour automatiquement deux fois par jour. Gratuit, sans inscription.
+- Annonces relues automatiquement plusieurs fois par jour. Gratuit, sans inscription, sans commission.
+
+## Chiffres du jour (calculés sur les annonces, refaits automatiquement)
+<!-- chiffres:debut -->
+- Annonces en ligne le 21/11/2026 : 51 859, dans les 24 gouvernorats.
+- Prix du milieu d'un appartement S+2 (loyer au mois / prix de vente), gouvernorats qui ont le plus d'annonces :
+  - Tunis : loyer 1 750 DT ; prix 340 000 DT
+  - Ariana : loyer 1 200 DT ; prix 375 000 DT
+  - Nabeul : loyer 1 300 DT ; prix 358 000 DT
+  - Sousse : loyer 1 100 DT ; prix 325 000 DT
+  - Ben Arous : loyer 1 100 DT ; prix 208 000 DT
+  - Bizerte : loyer 700 DT ; prix 200 000 DT
+  - Sfax : loyer 700 DT ; prix 159 000 DT
+  - Médenine : loyer 1 200 DT ; prix —
+<!-- chiffres:fin -->
+- Prix du milieu : la moitié des annonces demande moins, l'autre moitié plus ; donné seulement avec au moins 5 annonces. C'est un repère sur les prix demandés, pas une estimation.
 
 ## À savoir
 - Le site ne vend ni ne loue lui-même : il rassemble des annonces publiques. Pour citer : « Mon agent immobilier » et le lien https://monagent.clicvia.com/.
