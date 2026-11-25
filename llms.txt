@@ -9,7 +9,7 @@
 
 ## Chiffres du jour (calculés sur les annonces, refaits automatiquement)
 <!-- chiffres:debut -->
-- Annonces en ligne le 24/11/2026 : 51 864, dans les 24 gouvernorats.
+- Annonces en ligne le 24/11/2026 : 51 793, dans les 24 gouvernorats.
 - Prix du milieu d'un appartement S+2 (loyer au mois / prix de vente), gouvernorats qui ont le plus d'annonces :
   - Tunis : loyer 1 800 DT ; prix 350 000 DT
   - Ariana : loyer 1 200 DT ; prix 375 000 DT
