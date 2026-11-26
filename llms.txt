@@ -9,7 +9,7 @@
 
 ## Chiffres du jour (calculés sur les annonces, refaits automatiquement)
 <!-- chiffres:debut -->
-- Annonces en ligne le 25/11/2026 : 51 355, dans les 24 gouvernorats.
+- Annonces en ligne le 25/11/2026 : 51 263, dans les 24 gouvernorats.
 - Prix du milieu d'un appartement S+2 (loyer au mois / prix de vente), gouvernorats qui ont le plus d'annonces :
   - Tunis : loyer 1 800 DT ; prix 372 000 DT
   - Nabeul : loyer 1 300 DT ; prix 360 000 DT
