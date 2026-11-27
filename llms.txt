@@ -9,12 +9,12 @@
 
 ## Chiffres du jour (calculés sur les annonces, refaits automatiquement)
 <!-- chiffres:debut -->
-- Annonces en ligne le 27/11/2026 : 50 702, dans les 24 gouvernorats.
+- Annonces en ligne le 27/11/2026 : 51 804, dans les 24 gouvernorats.
 - Prix du milieu d'un appartement S+2 (loyer au mois / prix de vente), gouvernorats qui ont le plus d'annonces :
-  - Tunis : loyer 1 800 DT ; prix 370 000 DT
+  - Tunis : loyer 1 800 DT ; prix 373 000 DT
   - Ariana : loyer 1 200 DT ; prix 372 000 DT
   - Nabeul : loyer 1 300 DT ; prix 360 000 DT
-  - Sousse : loyer 1 100 DT ; prix 329 000 DT
+  - Sousse : loyer 1 100 DT ; prix 327 000 DT
   - Ben Arous : loyer 1 100 DT ; prix 215 000 DT
   - Bizerte : loyer 700 DT ; prix 182 000 DT
   - Sfax : loyer 700 DT ; prix 154 000 DT
